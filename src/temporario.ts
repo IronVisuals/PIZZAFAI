@@ -10,7 +10,7 @@ type Cliente = {
 let clientes: Cliente[] = [];
 let proximoId = 1;
 
-function cadastrasCliente() {
+function cadastroCliente() {
     console.log("\n....:::: CADASTRO DE CLIENTE ::::....");
     const nome = readlineSync.question("Nome: ");
     const telefone = readlineSync.question("Telefone: ");

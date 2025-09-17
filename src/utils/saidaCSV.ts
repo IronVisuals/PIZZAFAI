@@ -1,40 +1,63 @@
-import * as fs from 'fs';
-import * as os 'os';
-import * as path;
+/*
+// Dependências necessárias:
+// npm install @types/node
+// Este arquivo precisa ser executado em um ambiente Node.js
 
-export type Pedido = { // É AQUI AS VARIAVEIS PARA O APPMAIN.TS (SAIDA)
-    idPedido: string;
-    cliente: string;
-    sabor: string;
-    tamanho: "Extra-Grande" | "Grande" | "Media" | "Pequeno";
-    quantidade: number;
-    precoUnidade: number;
-    pagamento: "Dinheiro" | "Pix" | "debito" | "credito";
-    statusDoPedido: "Preparando" | "Pronto" | "Cancelado";
+import * as fs from "fs";
+import * as path from "path";
 
-
+// Tipo que representa os dados que devem vir prontos de outro lugar (appmain.ts)
+export type Pedido = {
+  idPedido: string;
+  cliente: string;
+  sabor: string;
+  tamanho: "Extra-Grande" | "Grande" | "Media" | "Pequeno";
+  quantidade: number;
+  precoUnidade: number;
+  pagamento: "Dinheiro" | "Pix" | "debito" | "credito";
+  statusDoPedido: "Preparando" | "Pronto" | "Cancelado";
 };
-// Gera arquivo CSV e salva na área de trabalho
-export function exportarpedidosCSV(pedidos: Pedido[]): string {
-    const desktop = path.join(os.homedir(), "Desktop");
-    const nomeArquivo = `pedidos- ${new Date().toISOString().split("T")[0]}.csv`;
-    const caminho = path.join(desktop, nomeArquivo);
 
-    const cabecalho = [
-        "idPedido", "cliente", "sabor", "tamanho", "quantidade", "precoUnidade", "pagamento", "statusDoPedido";
+/**
+ * Função responsável apenas por gerar o arquivo CSV e salvar em uma pasta fixa "saida-de-dados"
+ * @param pedidos Array de objetos Pedido (deve ser fornecido pelo appmain.ts)
+ * @returns Caminho completo do arquivo gerado
+ 
+export function exportarPedidosCSV(pedidos: Pedido[]): string {
+  // Cria (se não existir) a pasta "saida-de-dados" na raiz do projeto
+  const pastaSaida = path.resolve(process.cwd(), "saida-de-dados");
+  fs.mkdirSync(pastaSaida, { recursive: true });
+
+  const nomeArquivo = `pedidos-${new Date().toISOString().split("T")[0]}.csv`;
+  const caminho = path.join(pastaSaida, nomeArquivo);
+
+  const cabecalho = [
+    "idPedido",
+    "cliente",
+    "sabor",
+    "tamanho",
+    "quantidade",
+    "precoUnidade",
+    "pagamento",
+    "statusDoPedido"
+  ].join(";");
+
+  const linhas = pedidos.map((p) =>
+    [
+      p.idPedido,
+      p.cliente,
+      p.sabor,
+      p.tamanho,
+      p.quantidade,
+      p.precoUnidade.toFixed(2).replace(".", ","),
+      p.pagamento,
+      p.statusDoPedido
     ].join(";")
+  );
 
-    const linhas = pedidos.map(p => {
-        const total = (p.quantidade * p.precoUnidade).toFixed(2).replace(".", ",");
-        const preco = p.precoUnidade.toFixed(2).replace(".", ",");
-        return [
-            p.idPedido, p.cliente, p.sabor, p.tamanho, p.quantidade, p.precoUnidade, p.pagamento, p.statusDoPedido
-        ].join(";");
-    });
+  const conteudo = [cabecalho, ...linhas].join("\n");
+  fs.writeFileSync(caminho, conteudo, "utf-8");
 
-    const conteudo = [cabecalho, ...linhas].join("\n");
-    fs.writeFileSync(caminho, conteudo, "utf-8");
-
-    return caminho;
-
+  return caminho;
 }
+*/

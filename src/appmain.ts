@@ -1,19 +1,11 @@
 import * as readlineSync from "readline-sync";   // ---- Interação com prompt
-import exportarpedidosCSV = require("./utils/saidaCSV"); // - Importando função do saidaCSV.ts
+//import exportarpedidosCSV = require("./utils/saidaCSV"); // - Importando função do saidaCSV.ts
 
 
 
 
 
-// IMPORT ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-
-
-
-
-
-
+c// IMPORT ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
 let dig: number;
 
 function spacing(): void {
@@ -91,22 +83,3 @@ switch(dig) {
 
 
 
-//AQUI COLOCAR O CADASTRO DE PEDIDO
-
-const pedidos: Pedido[] = [
-    {
-            idPedido: 
-            cliente: 
-            sabor:
-            tamanho: 
-            quantidade,
-            precoUnidade: 
-            pagamento:
-            statusDoPedido:
-    }
-]
-
-// GERA O CSV COM O PEDIDO
-
-const caminho = exportarpedidosCSV(pedido);
-console.log(`Pedido salvo em: ${caminho}`);
