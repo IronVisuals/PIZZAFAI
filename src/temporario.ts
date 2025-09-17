@@ -16,6 +16,8 @@ function cadastrasCliente() {
     const telefone = readlineSync.question("Telefone: ");
     const endereco = readlineSync.question("Endereço: ");
 
-    const novoCliente: Cliente = {}
+    const novoCliente: Cliente = {
+        
+    }
 
 }
