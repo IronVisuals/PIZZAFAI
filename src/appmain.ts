@@ -1,22 +1,27 @@
 import * as readlineSync from "readline-sync";   // ---- Interação com prompt
+import * as path from "path";
+import { promises as fs } from "fs";
 
 
-// IMPORT ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
+// IMPORT ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+const pastaAtivos = path.join(__dirname, "..", "ativos"); // Caminho pasta root. 
+const clientesPath = path.join(pastaAtivos, "cliente.csv"); // Caminho para o armazenamento.
+const produtosPath = path.join(pastaAtivos, "produto.csv"); 
 
 
 
+// VARIAVEIS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-// VARIAVEIS E TYPES ^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
-
-function spacing(hops: number): void {       // ---- Função para saltar X linhas Function(X)
+function spacing(hops: number): void {       // ---- Função para saltar X linhas
     for (let i = 0; i < hops; i++) {
     console.log("");
     }
 }
 
+// FUNCTION ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-// FUNCTIONS ^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
 
 
 let dig: number;
@@ -50,7 +55,7 @@ switch(dig) {
 
     break;
     case 2: // ---------------------------- Cadastro-Cliente
-
+    console.log("VOCÊ SELECIONOU CADASTRO DE CLIENTE")
     break;
     }
     } while ((dig != 1) && (dig != 2));
@@ -89,6 +94,3 @@ switch(dig) {
     }
 
 } while (dig != 9);  
-
-
-// SAIDA CSV (CHAMANDO A FUNÇÃO PARA GERAR O ARQUIVO CSV NO DESKTOP)

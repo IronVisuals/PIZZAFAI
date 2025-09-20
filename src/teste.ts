@@ -54,7 +54,7 @@ switch(dig) {
 
         "1-Calabresa",
         "2-Marguerita",
-        "3-Fragon",
+        "3-Frango",
         "4-Portuguesa"
 
     ];
@@ -74,7 +74,7 @@ switch(dig) {
     let bolo = 12.00;
     let milk = 15.00;
 
-    console.log(sabores); //Apenas exemplo para facilitar menu interativo
+    console.log(sabores); // Apenas exemplo para facilitar menu interativo
 
     let pedido = readlineSync.questionInt("Informe seu pedido: ");
     console.log(`Tamanhos disponiveis: ${tamanho.join(" ")}`);
@@ -84,16 +84,25 @@ switch(dig) {
     switch (pedidoT){ //Switch para tamanho da pizza
 
         case 1: 
-        console.log(`Atualmente seu pedido é uma pizza Grande de ${pedido}`);
+        console.log(`Atualmente seu pedido é uma pizza Grande de ${sabores}`);
         dig2 = readlineSync.question("Gostaria de adicionar algo a mais: (S/N) ?"); //Apenas para o pedido de pizza grande
 
         switch (dig2) {
 
             case "s":
-            case "n":
+            case "S":
                 console.log(`Temos essas bebidas ${refrigerante.join(" ")}`);
                 console.log(`E essas sobremesas ${sobremesa.join(" ")}`);
+                break;
 
+            case "N":
+            case "n":
+                console.log("Sem adicionais!");
+                break;
+
+            default:
+                console.log("Opção invalida, responda S ou N.");
+                break;
 
         }
 
@@ -104,6 +113,8 @@ switch(dig) {
 
     break;
     //Pedro fim
+
+
     case 3:  // ----------------------------------------------------------------------------------------------------- MENU-CONSULTA
     console.log("....::::Tipo:Consulta::::....");
     console.log("1: Produto");
