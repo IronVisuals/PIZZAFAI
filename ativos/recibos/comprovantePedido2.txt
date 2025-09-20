@@ -1,9 +1,0 @@
-===== COMPROVANTE DO PEDIDO =====
-Data/Hora: 20/09/2025, 18:52:34
-----------------------------------
-Pizza: Média de Calabresa
-Bebida: Refrigerante 2 litros
-Sobremesa: Sorvete de Baunilha
-----------------------------------
-TOTAL: R$ 75.00
-==================================
