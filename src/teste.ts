@@ -48,9 +48,8 @@ switch(dig) {
     break;
 
     //Pedro inicio
-case 2:  // -------------------------------------------------------------- MENU-GERAR-PEDIDO
-{
-    // Menus
+case 2:  // --------------------------------------------------------- MENU-GERAR-PEDIDO
+
     const sabores = [
         "1-Calabresa",
         "2-Marguerita",
@@ -104,73 +103,66 @@ case 2:  // -------------------------------------------------------------- MENU-
     let tamanhoTexto = "";
     let precoBase = 0;
 
-    switch (pedidoT) {
-        case 1:
-            tamanhoTexto = "Grande";
-            precoBase = precoGrande;
-            console.log(`Atualmente seu pedido é uma pizza Grande de ${saborEscolhido}.`);
-
-            // Apenas para o pedido de pizza grande:
-            let dig2: string = readlineSync.question("Gostaria de adicionar algo a mais: (S/N) ? ");
-            switch (dig2.toUpperCase()) {
-                case "S": {
-                    // Oferece bebidas
-                    console.log(`Temos essas bebidas: ${refrigerante.join(" | ")}`);
-                    const opcBebida = readlineSync.questionInt("Escolha uma bebida (0 para nenhuma): ");
-                    let precoBebida = 0;
-                    let bebidaTexto = "Sem bebida";
-
-                    if (opcBebida === 1) { precoBebida = precoRefri2; bebidaTexto = "Refrigerante 2 litros"; }
-                    else if (opcBebida === 2) { precoBebida = precoRefri1; bebidaTexto = "Refrigerante 1,5 litros"; }
-                    else if (opcBebida === 3) { precoBebida = precoCerveja; bebidaTexto = "Cerveja"; }
-
-                    // Oferece sobremesas
-                    console.log(`E essas sobremesas: ${sobremesa.join(" | ")}`);
-                    const opcSobremesa = readlineSync.questionInt("Escolha uma sobremesa (0 para nenhuma): ");
-                    let precoSobremesa = 0;
-                    let sobremesaTexto = "Sem sobremesa";
-
-                    if (opcSobremesa === 1) { precoSobremesa = precoSorvete; sobremesaTexto = "Sorvete de Baunilha"; }
-                    else if (opcSobremesa === 2) { precoSobremesa = precoBolo; sobremesaTexto = "Bolo de chocolate"; }
-                    else if (opcSobremesa === 3) { precoSobremesa = precoMilk; sobremesaTexto = "Milkshake de Ovomaltime"; }
-
-                    const total = precoBase + precoBebida + precoSobremesa;
-
-                    console.log("\n===== RESUMO DO PEDIDO =====");
-                    console.log(`Pizza: ${tamanhoTexto} de ${saborEscolhido} -> R$ ${precoBase.toFixed(2)}`);
-                    console.log(`Bebida: ${bebidaTexto} -> R$ ${precoBebida.toFixed(2)}`);
-                    console.log(`Sobremesa: ${sobremesaTexto} -> R$ ${precoSobremesa.toFixed(2)}`);
-                    console.log(`TOTAL: R$ ${total.toFixed(2)}`);
-                    console.log("============================\n");
-                    break;
-                }
-                case "N":
-                    console.log(`Sem adicionais! Total: R$ ${precoBase.toFixed(2)}`);
-                    break;
-                default:
-                    console.log("Opcao invalida, responda S ou N.");
-                    break;
-            }
-            break;
-
-        case 2:
-            tamanhoTexto = "Média";
-            precoBase = precoMedia;
-            console.log(`Seu pedido: Pizza Média de ${saborEscolhido}. Total: R$ ${precoBase.toFixed(2)}`);
-            break;
-
-        case 3:
-            tamanhoTexto = "Pequena";
-            precoBase = precoPequena;
-            console.log(`Seu pedido: Pizza Pequena de ${saborEscolhido}. Total: R$ ${precoBase.toFixed(2)}`);
-            break;
-
-        default:
-            console.log("Opcao de tamanho invalida.");
-            break;
-    }
+switch (pedidoT) {
+    case 1:
+        tamanhoTexto = "Grande";
+        precoBase = precoGrande;
+        break;
+    case 2:
+        tamanhoTexto = "Média";
+        precoBase = precoMedia;
+        break;
+    case 3:
+        tamanhoTexto = "Pequena";
+        precoBase = precoPequena;
+        break;
+    default:
+        console.log("Opção de tamanho inválida.");
+        break;
 }
-break;
+
+console.log(`Atualmente seu pedido é uma pizza ${tamanhoTexto} de ${saborEscolhido}.`);
+
+// Aqui TODOS os tamanhos vão ter a opção
+let dig2: string = readlineSync.question("Gostaria de adicionar algo a mais: (S/N) ? ");
+
+switch (dig2.toUpperCase()) {
+    case "S": {
+        console.log(`Temos essas bebidas: ${refrigerante.join(" | ")}`);
+        const opcBebida = readlineSync.questionInt("Escolha uma bebida (0 para nenhuma): ");
+        let precoBebida = 0;
+        let bebidaTexto = "Sem bebida";
+
+        if (opcBebida === 1) { precoBebida = precoRefri2; bebidaTexto = "Refrigerante 2 litros"; }
+        else if (opcBebida === 2) { precoBebida = precoRefri1; bebidaTexto = "Refrigerante 1,5 litros"; }
+        else if (opcBebida === 3) { precoBebida = precoCerveja; bebidaTexto = "Cerveja"; }
+
+        console.log(`E essas sobremesas: ${sobremesa.join(" | ")}`);
+        const opcSobremesa = readlineSync.questionInt("Escolha uma sobremesa (0 para nenhuma): ");
+        let precoSobremesa = 0;
+        let sobremesaTexto = "Sem sobremesa";
+
+        if (opcSobremesa === 1) { precoSobremesa = precoSorvete; sobremesaTexto = "Sorvete de Baunilha"; }
+        else if (opcSobremesa === 2) { precoSobremesa = precoBolo; sobremesaTexto = "Bolo de chocolate"; }
+        else if (opcSobremesa === 3) { precoSobremesa = precoMilk; sobremesaTexto = "Milkshake de Ovomaltime"; }
+
+        const total = precoBase + precoBebida + precoSobremesa;
+
+        console.log("\n===== RESUMO DO PEDIDO =====");
+        console.log(`Pizza: ${tamanhoTexto} de ${saborEscolhido} -> R$ ${precoBase.toFixed(2)}`);
+        console.log(`Bebida: ${bebidaTexto} -> R$ ${precoBebida.toFixed(2)}`);
+        console.log(`Sobremesa: ${sobremesaTexto} -> R$ ${precoSobremesa.toFixed(2)}`);
+        console.log(`TOTAL: R$ ${total.toFixed(2)}`);
+        console.log("============================\n");
+        break;
+    }
+    case "N":
+        console.log(`Sem adicionais! Total: R$ ${precoBase.toFixed(2)}`);
+        break;
+    default:
+        console.log("Opção inválida, responda S ou N.");
+        break;
+}
 
     //Pedro fim
 
@@ -200,6 +192,3 @@ break;
     }
 
 } while (dig != 9);
-
-
-// SAIDA CSV (CHAMANDO A FUNÇÃO PARA GERAR O ARQUIVO CSV NO DESKTOP)
