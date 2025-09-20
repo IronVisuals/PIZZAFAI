@@ -1,0 +1,9 @@
+===== COMPROVANTE DO PEDIDO =====
+Data/Hora: 20/09/2025, 18:51:25
+----------------------------------
+Pizza: Grande de Frango
+Bebida: Cerveja
+Sobremesa: Milkshake de Ovomaltime
+----------------------------------
+TOTAL: R$ 74.50
+==================================

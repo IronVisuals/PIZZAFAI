@@ -1,9 +1,9 @@
 ===== COMPROVANTE DO PEDIDO =====
-Data/Hora: 20/09/2025, 17:51:01
+Data/Hora: 20/09/2025, 18:52:34
 ----------------------------------
-Pizza: Média de Frango
-Bebida: Cerveja
-Sobremesa: Bolo de chocolate
+Pizza: Média de Calabresa
+Bebida: Refrigerante 2 litros
+Sobremesa: Sorvete de Baunilha
 ----------------------------------
-TOTAL: R$ 62.50
+TOTAL: R$ 75.00
 ==================================
