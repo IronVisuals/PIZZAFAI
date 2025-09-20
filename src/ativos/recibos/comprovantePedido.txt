@@ -1,0 +1,9 @@
+===== COMPROVANTE DO PEDIDO =====
+Data/Hora: 20/09/2025, 17:51:01
+----------------------------------
+Pizza: Média de Frango
+Bebida: Cerveja
+Sobremesa: Bolo de chocolate
+----------------------------------
+TOTAL: R$ 62.50
+==================================

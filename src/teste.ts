@@ -164,7 +164,11 @@ switch (dig2.toUpperCase()) {
         break;
 }
 
-    //Pedro fim
+//SAIDA TXT DO COMPROVANTE DO PEDIDO
+
+    
+
+    //Pedro e Iron fim
 
 
     case 3:  // ----------------------------------------------------------------------------------------------------- MENU-CONSULTA
