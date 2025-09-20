@@ -248,9 +248,9 @@ PIZZIFY - Download ZIP
 
 Extraia o conteúdo em uma pasta no seu computador (ex.: C:\Projetos\PIZZIFY).
 
-Passo 1 — Instalar dependências
+Passo 1 — Instalar NODE e dependências
 
-Dê dois cliques em InstalarDependencias.bat
+Dê dois cliques em installnode.bat e InstalarDependencias.bat
 
 Isso vai instalar automaticamente todas as bibliotecas necessárias (npm install).
 
