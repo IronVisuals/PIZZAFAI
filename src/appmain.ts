@@ -1,78 +1,90 @@
 import * as readlineSync from "readline-sync";   // ---- Interação com prompt
-//import exportarpedidosCSV = require("./utils/saidaCSV"); // - Importando função do saidaCSV.ts
+
+
+// IMPORT ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
 
 
 
 
+// VARIAVEIS E TYPES ^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
 
-c// IMPORT ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
-let dig: number;
-
-function spacing(): void {
-    for (let i = 0; i < 30; i++) {
-    console.log(":");
+function spacing(hops: number): void {       // ---- Função para saltar X linhas Function(X)
+    for (let i = 0; i < hops; i++) {
+    console.log("");
     }
 }
 
+
+
+// FUNCTIONS ^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^ ^^^^
+
+
+let dig: number;
 do {
+spacing(30);
 console.log("....::::MENU::PIZZIFY::::....");
 console.log("1: Cadastrar");
 console.log("2: Pedido");
 console.log("3: Consultar");
 console.log("9: Sair");
 dig = readlineSync.questionInt("Digite: ");
-spacing();
+
 
 switch(dig) {
-    case 1:  // ---------------------------------- MENU-CADASTRO        
+
+    case 1:  // ----------------------------------------------------------- MENU-CADASTRO        
+
+
     do {
+    spacing(30);
     console.log("....::::Tipo:Cadastro::::....");
     console.log("1: Produto");
     console.log("2: Cliente");
     dig = readlineSync.questionInt("Digite: ");
-    spacing();
+    
 
     switch(dig) {
     case 1: // ---------------------------- Cadastro-Produto
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
+    console.log("VOCÊ SELECIONOU CADASTRO DE PRODUTO")
+
+
     break;
     case 2: // ---------------------------- Cadastro-Cliente
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
+
     break;
     }
     } while ((dig != 1) && (dig != 2));
 
-    
+
+
     break;
-    case 2:  // -------------------------------------------------------------- MENU-GERAR-PEDIDO
+    case 2:  // --------------------------------------------------------- MENU-GERAR-PEDIDO
+
+
+
+
+
+
+
+
     break;
-    case 3:  // ----------------------------------------------------------------------------------------------------- MENU-CONSULTA
-    console.log("....::::Tipo:Cadastro::::....");
+    case 3:  // --------------------------------------------------------- MENU-CONSULTA
+
+    spacing(30);
+    console.log("....::::Tipo:Consulta::::....");
     console.log("1: Produto");
     console.log("2: Cliente");
     dig = readlineSync.questionInt("Digite: ");
-    spacing();
-
+    
     switch(dig) {
     case 1: // --------------------------------- Consulta-Cliente
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
+    console.log("VOCÊ SELECIONOU CONSULTA DE CLIENTE");
     break;
     case 2: // --------------------------------- Consulta-Pedido
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
-    // COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI! COLOQUE SEU CODIGO AQUI!
+    console.log("VOCÊ SELECIONOU CONSULTA DE PRODUTO");
     break;
     } 
+
 
     }
 
@@ -80,6 +92,3 @@ switch(dig) {
 
 
 // SAIDA CSV (CHAMANDO A FUNÇÃO PARA GERAR O ARQUIVO CSV NO DESKTOP)
-
-
-
