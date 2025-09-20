@@ -92,7 +92,7 @@ switch(dig) {
             case "s":
             case "n":
                 console.log(`Temos essas bebidas ${refrigerante.join(" ")}`);
-                console.log(`E essas sobremesas ${sobremesa.join(" ")}`)
+                console.log(`E essas sobremesas ${sobremesa.join(" ")}`);
 
 
         }
