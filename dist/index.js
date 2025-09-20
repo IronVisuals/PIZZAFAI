@@ -323,6 +323,7 @@ TOTAL: R$ ${total.toFixed(2)}
 `;
             fs.writeFileSync(filePath, conteudoTXT, "utf-8");
             console.log("Comprovante salvo em:", filePath);
+            break;
         case 3: // ---------- CONSULTA ----------
             spacing(30);
             console.log("....::::Tipo:Consulta::::....");
