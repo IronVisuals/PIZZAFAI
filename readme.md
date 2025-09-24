@@ -162,11 +162,17 @@ cd PIZZAFAI
 npm install
 ```
 
+<<<<<<< HEAD
 ### Opção B) Baixar ZIP
 
 1. Baixe o ZIP do repositório.
 2. Extraia em uma pasta (ex.: `C:\Projetos\PIZZAFAI`).
 3. Abra o terminal nessa pasta e rode:
+=======
+Passo 1 — Instalar NODE e dependências
+
+Dê dois cliques em installnode.bat e InstalarDependencias.bat
+>>>>>>> c3b1f87338232619719e7029b9e9d802461604d8
 
    ```bash
    npm install
