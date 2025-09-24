@@ -426,7 +426,7 @@ carregarVendas();
 // ---------- MENU PRINCIPAL ----------
 do {
     spacing(1);
-    console.log("....::::MENU::PIZZIFY::::....");
+    console.log("....::::MENU::PIZZAFAI::::....");
     console.log("1: Cadastrar");
     console.log("2: Pedido");
     console.log("3: Consultar");
