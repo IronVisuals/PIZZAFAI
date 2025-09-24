@@ -1,0 +1,12 @@
+ID;Nome;Categoria;Preco;Ativo
+1;Calabresa;PIZZA;25;true
+2;Marguerita;PIZZA;25;true
+3;Frango;PIZZA;25;true
+4;Portuguesa;PIZZA;25;true
+5;Refrigerante 2L;BEBIDA;15;true
+6;Refrigerante 1,5L;BEBIDA;7.5;true
+7;Cerveja;BEBIDA;5.5;true
+8;Sorvete Baunilha;SOBREMESA;15;true
+9;Bolo Chocolate;SOBREMESA;12;true
+10;Milkshake Ovomaltine;SOBREMESA;15;true
+11;Pizza 1;PIZZA;30;true
