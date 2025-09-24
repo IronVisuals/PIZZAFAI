@@ -10,262 +10,208 @@
 
 -----
 
-# PIZZIFY — CLI de Pizzaria (TypeScript/Node)
+# PIZZAFAI — CLI de Pizzaria (TypeScript/Node)
 
-Sistema de console para **cadastro de clientes**, **geração de pedidos** com **desconto por CPF cadastrado** e **emissão de comprovantes TXT numerados**.
-Tudo salvo localmente em **CSV** (clientes) e **TXT** (recibos).
-
----
-
-## ✨ Funcionalidades
-
-* **Cadastro de clientes** (Nome, CPF, Telefone, Endereço) → persiste em `ativos/clientes.csv`
-* **Pedidos**:
-
-  * Sabores: Calabresa, Marguerita, Frango, Portuguesa
-  * Tamanhos: Grande | Média | Pequena
-  * Adicionais: Bebidas e Sobremesas (opcionais)
-  * **Desconto automático de 10%** se o **CPF estiver cadastrado**
-* **Comprovante TXT numerado**: `ativos/recibos/comprovantePedidoN.txt` (N incremental)
-* **Consulta**:
-
-  * Listar todos os clientes
-  * Consultar cliente específico por **CPF** ou **ID**
-* **Arquivos gerados**:
-
-  * `ativos/clientes.csv` (dados dos clientes)
-  * `ativos/recibos/comprovantePedido1.txt`, `...2.txt`, etc.
+Sistema de console para **cadastro de clientes**, **cadastro/gestão de produtos** (pizzas, bebidas, sobremesas e outros), **registro de pedidos** com **desconto por CPF cadastrado**, **emissão de comprovantes TXT numerados** e **relatórios de vendas de pizzas por dia e por mês**.
+Todos os dados ficam em arquivos **CSV** dentro da pasta `ativos/`.
 
 ---
 
-## 🗂️ Estrutura de Pastas (esperada)
+## 📖 Manual de Utilização
+
+Ao iniciar o programa, será exibido o menu principal:
 
 ```
-PIZZIFY/
-├─ src/
-│  └─ index.ts                # (ou appmain.ts) código principal
-├─ ativos/                    # criado/uso pelo app fora de src
-│  ├─ clientes.csv            # criado automaticamente ao cadastrar o 1º cliente
-│  └─ recibos/                # pasta de comprovantes
-│     ├─ comprovantePedido1.txt
-│     └─ comprovantePedido2.txt
-├─ package.json
-├─ tsconfig.json
-└─ README.md
-```
-
-> **Importante:** o código usa `__dirname, "..", "ativos"` para **sair da pasta `src`** e gravar em `ativos/…` na **raiz do projeto**.
-
----
-
-## 🔧 Pré-requisitos
-
-* **Node.js** LTS (v18+)
-* **npm** (vem com o Node)
-* **TypeScript** como dev-dependency (o projeto já traz `"typescript"` no `package.json`)
-
----
-
-## 📦 Instalação
-
-```bash
-# Clonar o repositório
-git clone https://github.com/IronVisuals/PIZZIFY
-cd PIZZIFY
-
-# Instalar dependências
-npm install
-```
-
----
-
-## ▶️ Como Executar
-
-### Opção A) Executar diretamente com ts-node
-
-Sem gerar pasta `dist`.
-
-```bash
-npx ts-node src/index.ts
-```
-
-> Se seu arquivo principal tiver outro nome (ex.: `appmain.ts`), ajuste o caminho:
-> `npx ts-node src/appmain.ts`
-
-### Opção B) Transpilar e rodar com Node
-
-Gera JS em `dist/`.
-
-```bash
-# Transpilar
-npx tsc
-
-# Executar
-node dist/index.js
-```
-
----
-
-## 🧭 Uso — Fluxo do Menu
-
-1. **Abrir o programa** (ts-node ou Node, ver acima)
-2. Você verá:
-
-```
-....::::MENU::PIZZIFY::::....
+....::::MENU::PIZZAFAI::::....
 1: Cadastrar
 2: Pedido
 3: Consultar
+4: Relatórios de Vendas
 9: Sair
 Digite:
 ```
 
-### 1) Cadastrar → Cliente
+### 1) Cadastrar
 
-* Informe **Nome**, **CPF** (apenas números), **Telefone**, **Endereço**
-* O cliente é salvo em `ativos/clientes.csv`
-* O **ID** é incremental e controlado em memória (recalculado na carga do CSV)
+* **Cliente**: informe **Nome**, **CPF**, **Telefone** e **Endereço** → salvo em `ativos/clientes.csv`.
+* **Produto**: informe **Nome**, **Categoria** (`PIZZA | BEBIDA | SOBREMESA | OUTRO`) e **Preço base** → salvo em `ativos/produtos.csv`.
+  O preço base da pizza corresponde ao tamanho **Pequena**. Os tamanhos maiores usam multiplicadores:
+
+  * Média = `1.8 × base`
+  * Grande = `1.8 × 1.2 × base`
+
+> Caso não existam produtos cadastrados, o sistema cria um catálogo padrão na primeira execução.
 
 ### 2) Pedido
 
-* Digite o **CPF do cliente** para validar o desconto (se **cadastrado** → **10% off**)
-* Escolha **sabor** (1–4) e **tamanho** (1–3)
-* Se desejar, adicione **bebida** e/ou **sobremesa**
-* O **TOTAL** já sai **com desconto aplicado** (quando aplicável)
-* É gerado **comprovante numerado** em `ativos/recibos/`:
+* Informe o **CPF** do cliente (se cadastrado, aplica **10% de desconto**).
+* Escolha a **pizza** e o **tamanho**.
+* Opcional: adicione **bebida** e/ou **sobremesa**.
+* O sistema gera:
 
-  * `comprovantePedido1.txt`, `comprovantePedido2.txt`, …
+  * **Resumo do pedido** no terminal.
+  * **Comprovante TXT** numerado em `ativos/recibos/`.
+  * **Registro da venda da pizza** em `ativos/vendas.csv` (para relatórios).
 
 ### 3) Consultar
 
-* **Lista completa** de clientes
-* Consulta de **cliente específico**:
+* Listar todos os clientes.
+* Consultar cliente específico por **CPF** ou **ID**.
+* Listar produtos por categoria ou todos os ativos.
 
-  * por **CPF**
-  * por **ID**
+### 4) Relatórios de Vendas
+
+* **Pizzas vendidas por dia**: agrupadas por data (`YYYY-MM-DD`).
+* **Pizzas vendidas por mês**: agrupadas por mês (`YYYY-MM`).
 
 ---
 
-## 🧠 Lógica Principal (resumo técnico)
+## 🗂️ Estrutura do Projeto
 
-* **Carregamento de clientes (`carregarClientes`)**
-  Lê `ativos/clientes.csv` (se existir), pula o cabeçalho e carrega `Cliente[]` em memória.
-  Ajusta `proximoIdCliente` com base no maior `ID` encontrado.
-
-* **Salvar cliente (`salvarCliente`)**
-  Cria o arquivo com **cabeçalho** se não existir e **apenda** o novo cliente (formato `;`-separado).
-
-* **Desconto por CPF**
-  Ao iniciar um **pedido**, lê o CPF informado:
-
-  ```ts
-  const clienteCadastrado = clientes.find(c => c.cpf === cpfCliente);
-  let desconto = clienteCadastrado ? 0.10 : 0;
-  const total = (precoBase + precoBebida + precoSobremesa) * (1 - desconto);
-  ```
-
-  O resumo e o comprovante mostram **nome do cliente** (se cadastrado) e **percentual de desconto**.
-
-* **Comprovante numerado (TXT)**
-  O código garante a pasta `ativos/recibos` fora da `src`:
-
-  ```ts
-  const dir = path.join(__dirname, "..", "ativos", "recibos");
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  const arquivos = fs.readdirSync(dir);
-  const comprovantes = arquivos.filter(a => a.startsWith("comprovantePedido") && a.endsWith(".txt"));
-  const numero = comprovantes.length + 1;
-
-  const filePath = path.join(dir, `comprovantePedido${numero}.txt`);
-  fs.writeFileSync(filePath, conteudoTXT, "utf-8");
-  ```
-
-  Assim, cada novo pedido cria `…Pedido1.txt`, `…Pedido2.txt`, etc.
+```
+PIZZAFAI/
+├─ ativos/
+│  ├─ clientes.csv             # base de clientes
+│  ├─ produtos.csv             # catálogo de produtos
+│  ├─ vendas.csv               # registro de vendas de pizzas
+│  └─ recibos/                 # comprovantes TXT numerados
+│     ├─ comprovantePedido1.txt
+│     └─ comprovantePedido2.txt
+│
+├─ dist/                       # saída gerada após transpilar
+│  ├─ index.js
+│  ├─ index.js.map
+│  ├─ index.d.ts
+│  └─ index.d.ts.map
+│
+├─ node_modules/               # dependências instaladas
+│
+├─ src/
+│  └─ index.ts                 # código principal em TypeScript
+│
+├─ InstalarDependencias.bat    # instala dependências (npm install)
+├─ installNode.bat             # instala Node.js (caso não esteja instalado)
+├─ PIZZAFAI-RUN.bat            # compila e executa o sistema
+├─ package.json
+├─ package-lock.json
+├─ tsconfig.json
+└─ readme.md
+```
 
 ---
 
 ## 📄 Formatos de Arquivo
 
-### `ativos/clientes.csv`
-
-Cabeçalho + linhas `;`-separadas:
+**`ativos/clientes.csv`**
 
 ```
 ID;Nome;CPF;Telefone;Endereco
 1;Maria Silva;12345678900;11999990000;Rua A, 123
-2;João Souza;98765432100;11888887777;Av. B, 456
 ```
 
-### `ativos/recibos/comprovantePedidoN.txt`
+**`ativos/produtos.csv`**
 
-Exemplo:
+```
+ID;Nome;Categoria;Preco;Ativo
+1;Calabresa;PIZZA;25;true
+2;Refrigerante 2L;BEBIDA;15;true
+```
+
+**`ativos/vendas.csv`**
+
+```
+ID;DataISO;Item;Categoria;Quantidade;ValorUnitario;ValorTotal
+1;2025-09-23T21:10:00.000Z;Média Calabresa;PIZZA;1;45;45
+```
+
+**`ativos/recibos/comprovantePedidoN.txt`**
 
 ```
 ===== COMPROVANTE DO PEDIDO =====
-Data/Hora: 20/09/2025 16:45:12
+Data/Hora: 23/09/2025 21:10:00
 Cliente: Maria Silva
 ----------------------------------
-Pizza: Grande de Calabresa
-Bebida: Refrigerante 2 litros
+Pizza: Média de Calabresa
+Bebida: Refrigerante 2L
 Sobremesa: Bolo de chocolate
 ----------------------------------
 Desconto: 10%
-TOTAL: R$ 72.90
+TOTAL: R$ 72,90
 ==================================
 ```
 
 ---
 
-## 🛠️ Scripts úteis (sugestão)
+## 🧩 Dependências
 
-No seu `package.json`, adicione:
-
-```json
-{
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "clean": "rimraf dist"
-  }
-}
-```
-
-> Instale `ts-node` e (opcional) `rimraf`:
->
-> ```bash
-> npm i -D ts-node
-> npm i -D rimraf
-> ```
+* **Node.js** LTS (v18+)
+* **npm** (vem com o Node)
+* **TypeScript** (devDependency)
+* **readline-sync** (para entrada de dados no terminal)
+* (Opcional) **ts-node** (execução direta de `.ts`)
 
 ---
 
-▶️ Como Executar (via .BAT)
+## ⚙️ Instalação
 
-Baixe o ZIP do repositório no GitHub:
-PIZZIFY - Download ZIP
+### Opção A) Clonar repositório
 
-Extraia o conteúdo em uma pasta no seu computador (ex.: C:\Projetos\PIZZIFY).
+```bash
+git clone https://github.com/<seu-usuario>/PIZZAFAI.git
+cd PIZZAFAI
+npm install
+```
 
-Passo 1 — Instalar dependências
+### Opção B) Baixar ZIP
 
-Dê dois cliques em InstalarDependencias.bat
+1. Baixe o ZIP do repositório.
+2. Extraia em uma pasta (ex.: `C:\Projetos\PIZZAFAI`).
+3. Abra o terminal nessa pasta e rode:
 
-Isso vai instalar automaticamente todas as bibliotecas necessárias (npm install).
+   ```bash
+   npm install
+   ```
 
-Passo 2 — Rodar o sistema
+---
 
-Depois de instalar, dê dois cliques em PIZZIFY-RUN.bat
+## ▶️ Execução
 
-O terminal será aberto e o sistema exibirá o menu:
+### 1) Desenvolvimento (sem build)
 
-....::::MENU::PIZZIFY::::....
-1: Cadastrar
-2: Pedido
-3: Consultar
-9: Sair
-Digite:
+```bash
+npx ts-node src/index.ts
+```
 
+### 2) Build + execução
 
-Agora é só navegar no menu e usar o sistema 🚀
+```bash
+npx tsc
+node dist/index.js
+```
+
+### 3) Via arquivos `.bat`
+
+* **`InstalarDependencias.bat`** → instala as dependências (`npm install`)
+* **`PIZZAFAI-RUN.bat`** → compila e executa (`npx tsc` + `node dist/index.js`)
+
+---
+
+## ✅ Checklist de Funcionalidades
+
+* Cadastro de clientes
+* Cadastro e listagem de produtos
+* Catálogo padrão inicial
+* Pedidos com desconto de 10% para CPF cadastrado
+* Comprovantes TXT numerados
+* Registro de vendas de pizzas em CSV
+* Relatórios de pizzas vendidas por dia
+* Relatórios de pizzas vendidas por mês
+
+---
+
+## 👥 Equipe
+
+* CLEITON GABRIEL MUCHENSKI COSTA – RA: 2508311
+* JOÃO PEDRO RIBEIRO DA SILVA – RA: 2502715
+* HENRIQUE GABRIEL CESARONI – RA: 2502407
+* PEDRO HENRIQUE DOS SANTOS AMORIM – RA: 2507980
