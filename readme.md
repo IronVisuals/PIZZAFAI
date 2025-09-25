@@ -223,3 +223,9 @@ node dist/index.js
 * PEDRO HENRIQUE DOS SANTOS AMORIM – RA: 2507980
 
 ---
+
+## Fluxograma
+
+<img width="798" height="918" alt="image" src="https://github.com/user-attachments/assets/5feaf17a-3815-4da1-b909-3f64bcbed214" />
+
+## 
