@@ -90,7 +90,6 @@ PIZZAFAI/
 │  └─ index.ts                 # código principal em TypeScript
 │
 ├─ InstalarDependencias.bat    # instala dependências (npm install)
-├─ installNode.bat             # instala Node.js (caso não esteja instalado)
 ├─ PIZZAFAI-RUN.bat            # compila e executa o sistema
 ├─ package.json
 ├─ package-lock.json
