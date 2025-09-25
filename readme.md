@@ -147,7 +147,6 @@ TOTAL: R$ 72,90
 * **Node.js** LTS (v18+)
 * **npm** (vem com o Node)
 * **TypeScript** (devDependency)
-* **readline-sync** (para entrada de dados no terminal)
 * (Opcional) **ts-node** (execução direta de `.ts`)
 
 ---
@@ -171,8 +170,9 @@ npm install
 =======
 Passo 1 — Instalar NODE e dependências
 
-Dê dois cliques em installnode.bat e InstalarDependencias.bat
->>>>>>> c3b1f87338232619719e7029b9e9d802461604d8
+Site para instalar o NODE: https://nodejs.org/en/download
+
+Dê dois cliques em InstalarDependencias.bat
 
    ```bash
    npm install
