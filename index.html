@@ -109,3 +109,409 @@
     <script src="assets/js/app.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>PizzaFai - Sistema de Pizzaria</title>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍕 PizzaFai</div>
+            <div class="tagline">Sistema de Gerenciamento de Pizzaria</div>
+        </header>
+
+        <nav>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showSection('pedido')">📋 Novo Pedido</button>
+                <button class="nav-btn" onclick="showSection('clientes')">👥 Clientes</button>
+                <button class="nav-btn" onclick="showSection('produtos')">🍴 Produtos</button>
+                <button class="nav-btn" onclick="showSection('relatorios')">📊 Relatórios</button>
+            </div>
+        </nav>
+
+        <div class="content">
+            <!-- Seção de Pedidos -->
+            <div id="pedido" class="section active">
+                <h2>🎯 Novo Pedido</h2>
+                <div class="form-group">
+                    <label>CPF do Cliente:</label>
+                    <input type="text" id="cpfCliente" placeholder="Somente números" maxlength="11">
+                    <small>Cliente cadastrado ganha 10% de desconto!</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Escolha sua Pizza:</label>
+                    <div id="pizzas-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tamanho:</label>
+                    <select id="tamanhoPizza">
+                        <option value="1">Pequena (1.0x)</option>
+                        <option value="1.8">Média (1.8x)</option>
+                        <option value="2.16">Grande (2.16x)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Bebidas:</label>
+                    <select id="bebidaSelect">
+                        <option value="">Nenhuma bebida</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Sobremesas:</label>
+                    <select id="sobremesaSelect">
+                        <option value="">Nenhuma sobremesa</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="finalizarPedido()">✅ Finalizar Pedido</button>
+
+                <div id="resumoPedido" class="summary hidden">
+                    <h3>📋 Resumo do Pedido</h3>
+                    <div id="resumoContent"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Clientes -->
+            <div id="clientes" class="section">
+                <h2>👥 Gerenciar Clientes</h2>
+                
+                <div class="card">
+                    <h3>➕ Cadastrar Novo Cliente</h3>
+                    <div class="form-group">
+                        <input type="text" id="nomeCliente" placeholder="Nome completo">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="cpfNovo" placeholder="CPF (somente números)" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="telefoneCliente" placeholder="Telefone">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="enderecoCliente" placeholder="Endereço completo">
+                    </div>
+                    <button class="btn" onclick="cadastrarCliente()">💾 Cadastrar Cliente</button>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Consultar Clientes</h3>
+                    <button class="btn" onclick="listarClientes()">📋 Listar Todos</button>
+                    <div id="listaClientes"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Produtos -->
+            <div id="produtos" class="section">
+                <h2>🍴 Gerenciar Produtos</h2>
+                <div id="listaProdutos"></div>
+            </div>
+
+            <!-- Seção de Relatórios -->
+            <div id="relatorios" class="section">
+                <h2>📊 Relatórios de Vendas</h2>
+                <button class="btn" onclick="gerarRelatorioDia()">📅 Pizzas por Dia</button>
+                <button class="btn" onclick="gerarRelatorioMes()">📈 Pizzas por Mês</button>
+                <div id="relatorioResultado"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+         // Estado da aplicação
+        let state = {
+            clientes: [],
+            produtos: [],
+            pedidoAtual: {
+                cliente: null,
+                pizza: null,
+                tamanho: 1.0,
+                bebida: null,
+                sobremesa: null
+            }
+        };
+
+        // Funções de navegação
+        function showSection(sectionId) {
+            // Esconde todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostra a seção selecionada
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Simulação da comunicação com o back-end
+        class PizzaFaiAPI {
+            static async getClientes() {
+                // Simula requisição para o back-end
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve([
+                            { id: 1, nome: "João Silva", cpf: "12345678900", telefone: "(11) 9999-9999", endereco: "Rua A, 123" },
+                            { id: 2, nome: "Maria Santos", cpf: "98765432100", telefone: "(11) 8888-8888", endereco: "Rua B, 456" }
+                        ]);
+                    }, 500);
+                });
+            }
+
+            static async getProdutos() {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve({
+                            PIZZA: [
+                                { id: 1, nome: "Calabresa", preco: 25.00 },
+                                { id: 2, nome: "Marguerita", preco: 25.00 },
+                                { id: 3, nome: "Frango", preco: 25.00 }
+                            ],
+                            BEBIDA: [
+                                { id: 4, nome: "Refrigerante 2L", preco: 15.00 },
+                                { id: 5, nome: "Cerveja", preco: 5.50 }
+                            ],
+                            SOBREMESA: [
+                                { id: 6, nome: "Sorvete Baunilha", preco: 15.00 },
+                                { id: 7, nome: "Bolo Chocolate", preco: 12.00 }
+                            ]
+                        });
+                    }, 500);
+                });
+            }
+
+            static async cadastrarCliente(cliente) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log("Cliente cadastrado:", cliente);
+                        resolve({ success: true, id: Date.now() });
+                    }, 500);
+                });
+            }
+
+            static async finalizarPedido(pedido) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log("Pedido finalizado:", pedido);
+                        resolve({ 
+                            success: true, 
+                            comprovante: `comprovantePedido${Math.random()}.txt`,
+                            total: pedido.total
+                        });
+                    }, 1000);
+                });
+            }
+        }
+
+        // Funções principais
+        async function carregarDados() {
+            try {
+                state.clientes = await PizzaFaiAPI.getClientes();
+                state.produtos = await PizzaFaiAPI.getProdutos();
+                carregarPizzas();
+                carregarBebidas();
+                carregarSobremesas();
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+            }
+        }
+
+        function carregarPizzas() {
+            const container = document.getElementById('pizzas-list');
+            container.innerHTML = '';
+            
+            state.produtos.PIZZA.forEach(pizza => {
+                const div = document.createElement('div');
+                div.className = 'pizza-option';
+                div.innerHTML = `
+                    <strong>${pizza.nome}</strong>
+                    <div>Preço base: R$ ${pizza.preco.toFixed(2)}</div>
+                `;
+                div.onclick = () => selecionarPizza(pizza);
+                container.appendChild(div);
+            });
+        }
+
+        function carregarBebidas() {
+            const select = document.getElementById('bebidaSelect');
+            select.innerHTML = '<option value="">Nenhuma bebida</option>';
+            
+            state.produtos.BEBIDA.forEach(bebida => {
+                const option = document.createElement('option');
+                option.value = bebida.id;
+                option.textContent = `${bebida.nome} - R$ ${bebida.preco.toFixed(2)}`;
+                select.appendChild(option);
+            });
+        }
+
+        function carregarSobremesas() {
+            const select = document.getElementById('sobremesaSelect');
+            select.innerHTML = '<option value="">Nenhuma sobremesa</option>';
+            
+            state.produtos.SOBREMESA.forEach(sobremesa => {
+                const option = document.createElement('option');
+                option.value = sobremesa.id;
+                option.textContent = `${sobremesa.nome} - R$ ${sobremesa.preco.toFixed(2)}`;
+                select.appendChild(option);
+            });
+        }
+
+        function selecionarPizza(pizza) {
+            // Remove seleção anterior
+            document.querySelectorAll('.pizza-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Adiciona seleção atual
+            event.target.classList.add('selected');
+            state.pedidoAtual.pizza = pizza;
+        }
+
+        async function finalizarPedido() {
+            const cpf = document.getElementById('cpfCliente').value;
+            const tamanho = parseFloat(document.getElementById('tamanhoPizza').value);
+            const bebidaId = document.getElementById('bebidaSelect').value;
+            const sobremesaId = document.getElementById('sobremesaSelect').value;
+
+            // Validações
+            if (!state.pedidoAtual.pizza) {
+                alert('Por favor, selecione uma pizza!');
+                return;
+            }
+
+            // Encontra cliente
+            const cliente = state.clientes.find(c => c.cpf === cpf);
+            state.pedidoAtual.cliente = cliente;
+
+            // Calcula totais
+            const precoPizza = state.pedidoAtual.pizza.preco * tamanho;
+            const bebida = state.produtos.BEBIDA.find(b => b.id == bebidaId);
+            const sobremesa = state.produtos.SOBREMESA.find(s => s.id == sobremesaId);
+            
+            const precoBebida = bebida ? bebida.preco : 0;
+            const precoSobremesa = sobremesa ? sobremesa.preco : 0;
+            
+            const totalBruto = precoPizza + precoBebida + precoSobremesa;
+            const desconto = cliente ? 0.1 : 0;
+            const total = totalBruto * (1 - desconto);
+
+            // Mostra resumo
+            const resumo = document.getElementById('resumoContent');
+            resumo.innerHTML = `
+                <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'Não cadastrado'}</p>
+                <p><strong>Pizza:</strong> ${state.pedidoAtual.pizza.nome} - R$ ${precoPizza.toFixed(2)}</p>
+                <p><strong>Bebida:</strong> ${bebida ? bebida.nome : 'Nenhuma'} - R$ ${precoBebida.toFixed(2)}</p>
+                <p><strong>Sobremesa:</strong> ${sobremesa ? sobremesa.nome : 'Nenhuma'} - R$ ${precoSobremesa.toFixed(2)}</p>
+                <p><strong>Desconto:</strong> ${desconto * 100}%</p>
+                <h3>Total: R$ ${total.toFixed(2)}</h3>
+            `;
+
+            document.getElementById('resumoPedido').classList.remove('hidden');
+
+            // Envia para o back-end
+            const resultado = await PizzaFaiAPI.finalizarPedido({
+                cliente: state.pedidoAtual.cliente,
+                pizza: state.pedidoAtual.pizza,
+                tamanho,
+                bebida,
+                sobremesa,
+                total
+            });
+
+            if (resultado.success) {
+                alert(`Pedido finalizado com sucesso! Comprovante: ${resultado.comprovante}`);
+            }
+        }
+
+        async function cadastrarCliente() {
+            const nome = document.getElementById('nomeCliente').value;
+            const cpf = document.getElementById('cpfNovo').value;
+            const telefone = document.getElementById('telefoneCliente').value;
+            const endereco = document.getElementById('enderecoCliente').value;
+
+            if (!nome || !cpf) {
+                alert('Por favor, preencha nome e CPF!');
+                return;
+            }
+
+            const resultado = await PizzaFaiAPI.cadastrarCliente({
+                nome, cpf, telefone, endereco
+            });
+
+            if (resultado.success) {
+                alert('Cliente cadastrado com sucesso!');
+                // Limpa formulário
+                document.getElementById('nomeCliente').value = '';
+                document.getElementById('cpfNovo').value = '';
+                document.getElementById('telefoneCliente').value = '';
+                document.getElementById('enderecoCliente').value = '';
+                
+                // Recarrega clientes
+                state.clientes = await PizzaFaiAPI.getClientes();
+            }
+        }
+
+        async function listarClientes() {
+            const container = document.getElementById('listaClientes');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            const clientes = await PizzaFaiAPI.getClientes();
+            
+            container.innerHTML = '';
+            clientes.forEach(cliente => {
+                const div = document.createElement('div');
+                div.className = 'client-card';
+                div.innerHTML = `
+                    <strong>${cliente.nome}</strong>
+                    <div>CPF: ${cliente.cpf}</div>
+                    <div>Telefone: ${cliente.telefone}</div>
+                    <div>Endereço: ${cliente.endereco}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function gerarRelatorioDia() {
+            const container = document.getElementById('relatorioResultado');
+            container.innerHTML = '<div class="loading"><div>Gerando relatório...</div></div>';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>📅 Pizzas Vendidas por Dia</h3>
+                        <p>2024-01-15: 8 pizzas</p>
+                        <p>2024-01-16: 12 pizzas</p>
+                        <p>2024-01-17: 15 pizzas</p>
+                    </div>
+                `;
+            }, 1000);
+        }
+
+        async function gerarRelatorioMes() {
+            const container = document.getElementById('relatorioResultado');
+            container.innerHTML = '<div class="loading"><div>Gerando relatório...</div></div>';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>📈 Pizzas Vendidas por Mês</h3>
+                        <p>2024-01: 150 pizzas</p>
+                        <p>2023-12: 180 pizzas</p>
+                        <p>2023-11: 140 pizzas</p>
+                    </div>
+                `;
+            }, 1000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+        });
+    </script>
+</body>
+</html>

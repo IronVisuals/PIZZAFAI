@@ -99,6 +99,34 @@ PIZZAFAI/
 
 ---
 
+## 🌐 Frontend (Web UI)
+
+Além do CLI em `src/index.ts`, o projeto inclui uma interface web leve para facilitar testes e uso local.
+
+- **Arquivos principais**:
+  - `index.html` — Página pública (Pedidos & Clientes).
+  - `admin.html` — Área administrativa (Clientes, Produtos, Relatórios e Novo Pedido).
+  - `pedido_clientes.html` — Página alternativa com Pedidos + Clientes (backup).
+  - `assets/js/app.js` — Lógica da UI, integração com a API e fallbacks para `localStorage` quando o backend não está disponível.
+  - `styles.css` — Estilos compartilhados para todas as páginas.
+
+- **Comportamento importante**:
+  - A UI tenta fazer requisições para o backend em `http://localhost:3000`. Se o backend estiver offline, o frontend usa dados mockados e `localStorage` para permitir cadastro e visualização locais.
+  - Ao finalizar pedido, o frontend gera automaticamente um comprovante e tenta baixar um PDF (usa `jsPDF` via CDN) — caso não seja possível, faz fallback para um arquivo `.txt` e inicia o download.
+
+- **Como executar a UI**:
+  1. Maneira rápida: abra `index.html` no navegador (duplo-clique). Para funcionalidades que fazem `fetch` ao backend, é recomendado servir via HTTP:
+
+# Ou usando o pacote 'serve' com npx:
+npx serve .
+```
+
+  2. Abra `http://localhost:8000/index.html` (ou a porta que escolheu) no navegador.
+  3. Para recursos completos (salvar pedidos no servidor), inicie também o backend na porta `3000`.
+
+--
+
+
 ## 📄 Formatos de Arquivo
 
 **`ativos/clientes.csv`**
