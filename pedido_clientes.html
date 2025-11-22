@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>PizzaFai - Pedidos & Clientes</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍕 PizzaFai</div>
+            <div class="tagline">Sistema de Gerenciamento de Pizzaria</div>
+            <div class="imagem"><img src="" alt="Imagem PizzaFai"></div>
+        </header>
+
+        <nav>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Voltar</button>
+                <button class="nav-btn" onclick="showSection('pedido')">📋 Novo Pedido</button>
+                <button class="nav-btn" onclick="showSection('clientes')">👥 Clientes</button>
+            </div>
+        </nav>
+
+        <div class="content">
+            <!-- Seção de Pedidos -->
+            <div id="pedido" class="section active">
+                <h2>🎯 Novo Pedido</h2>
+                <div class="form-group">
+                    <label>CPF do Cliente:</label>
+                    <input type="text" id="cpfCliente" placeholder="Somente números" maxlength="11">
+                    <small>Cliente cadastrado ganha 10% de desconto!</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Escolha sua Pizza:</label>
+                    <div id="pizzas-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tamanho:</label>
+                    <select id="tamanhoPizza">
+                        <option value="1">Pequena (1.0x)</option>
+                        <option value="1.8">Média (1.8x)</option>
+                        <option value="2.16">Grande (2.16x)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Bebidas:</label>
+                    <select id="bebidaSelect">
+                        <option value="">Nenhuma bebida</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Sobremesas:</label>
+                    <select id="sobremesaSelect">
+                        <option value="">Nenhuma sobremesa</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="finalizarPedido()">✅ Finalizar Pedido</button>
+
+                <div id="resumoPedido" class="summary hidden">
+                    <h3>📋 Resumo do Pedido</h3>
+                    <div id="resumoContent"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Clientes -->
+            <div id="clientes" class="section">
+                <h2>👥 Gerenciar Clientes</h2>
+                
+                <div class="card">
+                    <h3>➕ Cadastrar Novo Cliente</h3>
+                    <div class="form-group">
+                        <input type="text" id="nomeCliente" placeholder="Nome completo">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="cpfNovo" placeholder="CPF (somente números)" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="telefoneCliente" placeholder="Telefone">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="enderecoCliente" placeholder="Endereço completo">
+                    </div>
+                    <button class="btn" onclick="cadastrarCliente()">💾 Cadastrar Cliente</button>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Consultar Clientes</h3>
+                    <button class="btn" onclick="listarClientes()">📋 Listar Todos</button>
+                    <div id="listaClientes"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
