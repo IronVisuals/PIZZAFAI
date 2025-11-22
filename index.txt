@@ -1,0 +1,21 @@
+ <!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>PIZZIFY</title>
+</head>
+<body>
+    <section class = "cabecalho">
+
+    <header>Pizzify</header>
+
+    </section>
+
+    <section class = "menu-estatico">
+        <h1>Sistema da Pizzaria</h1>
+    </section>
+
+</body>
+</html> 

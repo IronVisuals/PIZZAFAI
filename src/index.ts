@@ -1,6 +1,11 @@
 import * as readlineSync from "readline-sync";
 import * as fs from "fs";
 import * as path from "path";
+import { fileURLToPath } from 'url';
+
+// ESM: recria __filename / __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ---------- CONFIGURAÇÃO ----------
 const pastaAtivos = path.join(__dirname, "..", "ativos");
@@ -64,7 +69,10 @@ function brMoney(n: number) {
 
 function lerCSV(pathFile: string): string[] {
   if (!fs.existsSync(pathFile)) return [];
-  return fs.readFileSync(pathFile, "utf-8").split("\n").filter(l => l.trim().length > 0);
+  return fs
+    .readFileSync(pathFile, "utf-8")
+    .split("\n")
+    .filter((l: string) => l.trim().length > 0);
 }
 
 // ---------- CLIENTES (CSV) ----------
@@ -73,9 +81,15 @@ function carregarClientes() {
   const linhas = fs.readFileSync(clientesPath, "utf-8").split("\n").slice(1);
   for (const linha of linhas) {
     if (!linha.trim()) continue;
-    const [id, nome, cpf, telefone, endereco] = linha.split(";");
-    clientes.push({ id: parseInt(id), nome, cpf, telefone, endereco });
-    if (parseInt(id) >= proximoIdCliente) proximoIdCliente = parseInt(id) + 1;
+    const parts = linha.split(";");
+    const idStr = parts[0] ?? "0";
+    const nome = parts[1] ?? "";
+    const cpf = parts[2] ?? "";
+    const telefone = parts[3] ?? "";
+    const endereco = parts[4] ?? "";
+    const idNum = parseInt(idStr) || 0;
+    clientes.push({ id: idNum, nome, cpf, telefone, endereco });
+    if (idNum >= proximoIdCliente) proximoIdCliente = idNum + 1;
   }
 }
 
@@ -153,15 +167,21 @@ function carregarProdutos() {
   const linhas = fs.readFileSync(produtosPath, "utf-8").split("\n").slice(1);
   for (const linha of linhas) {
     if (!linha.trim()) continue;
-    const [id, nome, categoria, preco, ativo] = linha.split(";");
+    const parts = linha.split(";");
+    const idStr = parts[0] ?? "0";
+    const nome = parts[1] ?? "";
+    const categoria = (parts[2] ?? "OUTRO") as Categoria;
+    const precoStr = parts[3] ?? "0";
+    const ativoStr = parts[4] ?? "false";
+    const idNum = parseInt(idStr) || 0;
     produtos.push({
-      id: parseInt(id),
+      id: idNum,
       nome,
-      categoria: categoria as Categoria,
-      preco: parseFloat(preco),
-      ativo: ativo === "true",
+      categoria,
+      preco: parseFloat(precoStr) || 0,
+      ativo: ativoStr === "true",
     });
-    if (parseInt(id) >= proximoIdProduto) proximoIdProduto = parseInt(id) + 1;
+    if (idNum >= proximoIdProduto) proximoIdProduto = idNum + 1;
   }
 }
 
@@ -250,7 +270,8 @@ function carregarVendas() {
   const linhas = fs.readFileSync(vendasPath, "utf-8").split("\n").slice(1);
   for (const linha of linhas) {
     if (!linha.trim()) continue;
-    const [id, dataISO, item, categoria, quantidade, valorUnitario, valorTotal] = linha.split(";");
+    const parts = linha.split(";");
+    const id = parts[0] ?? "0";
     const idNum = parseInt(id);
     if (idNum >= proximoIdVenda) proximoIdVenda = idNum + 1;
   }
@@ -276,10 +297,14 @@ function relatorioPizzasPorDia() {
   const linhas = lerCSV(vendasPath).slice(1);
   const mapa = new Map<string, number>(); // "YYYY-MM-DD" -> qtd
   for (const l of linhas) {
-    const [_id, dataISO, item, categoria, quantidadeStr] = l.split(";");
+    const parts = l.split(";");
+    const categoria = parts[3] ?? "";
     if (categoria !== "PIZZA") continue;
+    const dataISO = parts[1] ?? "";
+    if (!dataISO) continue;
     const dia = new Date(dataISO).toISOString().slice(0, 10); // YYYY-MM-DD
-    const qtd = parseInt(quantidadeStr);
+    const quantidadeStr = parts[4] ?? "0";
+    const qtd = parseInt(quantidadeStr) || 0;
     mapa.set(dia, (mapa.get(dia) || 0) + qtd);
   }
   console.log("\n==== RELATÓRIO: PIZZAS VENDIDAS POR DIA ====");
@@ -293,11 +318,15 @@ function relatorioPizzasPorMes() {
   const linhas = lerCSV(vendasPath).slice(1);
   const mapa = new Map<string, number>(); // "YYYY-MM" -> qtd
   for (const l of linhas) {
-    const [_id, dataISO, _item, categoria, quantidadeStr] = l.split(";");
+    const parts = l.split(";");
+    const categoria = parts[3] ?? "";
     if (categoria !== "PIZZA") continue;
+    const dataISO = parts[1] ?? "";
+    if (!dataISO) continue;
     const d = new Date(dataISO);
     const mes = d.toISOString().slice(0,7); // YYYY-MM
-    const qtd = parseInt(quantidadeStr);
+    const quantidadeStr = parts[4] ?? "0";
+    const qtd = parseInt(quantidadeStr) || 0;
     mapa.set(mes, (mapa.get(mes) || 0) + qtd);
   }
   console.log("\n==== RELATÓRIO: PIZZAS VENDIDAS POR MÊS ====");
@@ -352,10 +381,12 @@ function fluxoPedido() {
     if (querBebida === "S") {
       bebidas.forEach((p,i)=>console.log(`${i+1}-${p.nome} (${brMoney(p.preco)})`));
       const opB = readlineSync.questionInt("Escolha bebida (0 para nenhuma): ");
-      if (opB > 0 && opB <= bebidas.length) {
-        const b = bebidas[opB-1];
-        bebidaTexto = b.nome;
-        precoBebida = b.preco;
+        if (opB > 0 && opB <= bebidas.length) {
+          const b = bebidas[opB-1];
+          if (b) {
+            bebidaTexto = b.nome;
+            precoBebida = b.preco;
+          }
       }
     }
   }
@@ -370,8 +401,10 @@ function fluxoPedido() {
       const opS = readlineSync.questionInt("Escolha sobremesa (0 para nenhuma): ");
       if (opS > 0 && opS <= sobremesas.length) {
         const s = sobremesas[opS-1];
-        sobremesaTexto = s.nome;
-        precoSobremesa = s.preco;
+          if (s) {
+            sobremesaTexto = s.nome;
+            precoSobremesa = s.preco;
+          }
       }
     }
   }
