@@ -138,12 +138,25 @@ class PizzaFaiAPI {
         } catch (error) {
             console.error('Erro ao finalizar pedido:', error);
             // Simula sucesso se o back-end não estiver disponível
-            return {
-                success: true,
-                comprovante: `comprovantePedido${Date.now()}.txt`,
-                total: pedido.total,
-                message: 'Pedido processado localmente'
-            };
+            // Gera e baixa um comprovante (tenta PDF via jsPDF; cai para .txt se necessário)
+            const baseFilename = `comprovantePedido${Date.now()}`;
+            try {
+                const downloaded = await generateAndDownloadComprovante(pedido, baseFilename);
+                return {
+                    success: true,
+                    comprovante: downloaded,
+                    total: pedido.total,
+                    message: 'Pedido processado localmente'
+                };
+            } catch (e) {
+                console.error('Falha ao gerar comprovante localmente:', e);
+                return {
+                    success: true,
+                    comprovante: `${baseFilename}.txt`,
+                    total: pedido.total,
+                    message: 'Pedido processado localmente (sem comprovante automático)'
+                };
+            }
         }
     }
 
@@ -201,6 +214,24 @@ class PizzaFaiAPI {
                 { id: 7, nome: "Bolo Chocolate", preco: 12.00, categoria: "SOBREMESA" }
             ]
         };
+    }
+
+    static async getRelatorioDiaMock() {
+        // Exemplo simples de relatório diário
+        return [
+            { dia: '2024-01-15', quantidade: 8 },
+            { dia: '2024-01-16', quantidade: 12 },
+            { dia: '2024-01-17', quantidade: 15 }
+        ];
+    }
+
+    static async getRelatorioMesMock() {
+        // Exemplo simples de relatório mensal
+        return [
+            { mes: '2024-01', quantidade: 150 },
+            { mes: '2023-12', quantidade: 180 },
+            { mes: '2023-11', quantidade: 140 }
+        ];
     }
 }
 
@@ -492,14 +523,29 @@ async function gerarRelatorioDia() {
     container.innerHTML = '<div class="loading">Gerando relatório...</div>';
     
     try {
-        const dados = await PizzaFaiAPI.getRelatorioDia();
-        
+        let dados = await PizzaFaiAPI.getRelatorioDia();
+
+        // Normaliza formatos diferentes de resposta para um array
+        if (!Array.isArray(dados)) {
+            if (dados && Array.isArray(dados.data)) dados = dados.data;
+            else if (dados && Array.isArray(dados.items)) dados = dados.items;
+            else if (dados && typeof dados === 'object') dados = Object.values(dados);
+            else dados = [];
+        }
+
+        if (!dados || dados.length === 0) {
+            container.innerHTML = '<div class="no-data">Nenhum dado no relatório</div>';
+            return;
+        }
+
         let html = '<div class="card"><h3>📅 Pizzas Vendidas por Dia</h3>';
         dados.forEach(item => {
-            html += `<p>${item.dia}: ${item.quantidade} pizza(s)</p>`;
+            const dia = item.dia || item.date || item.data || (item[0] || '');
+            const quantidade = item.quantidade || item.qtd || item.count || item[1] || 0;
+            html += `<p>${dia}: ${quantidade} pizza(s)</p>`;
         });
         html += '</div>';
-        
+
         container.innerHTML = html;
     } catch (error) {
         console.error('Erro ao gerar relatório:', error);
@@ -514,14 +560,29 @@ async function gerarRelatorioMes() {
     container.innerHTML = '<div class="loading">Gerando relatório...</div>';
     
     try {
-        const dados = await PizzaFaiAPI.getRelatorioMes();
-        
+        let dados = await PizzaFaiAPI.getRelatorioMes();
+
+        // Normaliza formatos diferentes de resposta para um array
+        if (!Array.isArray(dados)) {
+            if (dados && Array.isArray(dados.data)) dados = dados.data;
+            else if (dados && Array.isArray(dados.items)) dados = dados.items;
+            else if (dados && typeof dados === 'object') dados = Object.values(dados);
+            else dados = [];
+        }
+
+        if (!dados || dados.length === 0) {
+            container.innerHTML = '<div class="no-data">Nenhum dado no relatório</div>';
+            return;
+        }
+
         let html = '<div class="card"><h3>📈 Pizzas Vendidas por Mês</h3>';
         dados.forEach(item => {
-            html += `<p>${item.mes}: ${item.quantidade} pizza(s)</p>`;
+            const mes = item.mes || item.month || item.mes_ref || (item[0] || '');
+            const quantidade = item.quantidade || item.qtd || item.count || item[1] || 0;
+            html += `<p>${mes}: ${quantidade} pizza(s)</p>`;
         });
         html += '</div>';
-        
+
         container.innerHTML = html;
     } catch (error) {
         console.error('Erro ao gerar relatório:', error);
@@ -586,3 +647,79 @@ async function cadastrarProdutoFront() {
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
 });
+
+// Gera um comprovante (PDF preferencial) e força download no navegador.
+async function generateAndDownloadComprovante(pedido, baseFilename) {
+    const filenamePdf = `${baseFilename}.pdf`;
+
+    const lines = [];
+    lines.push('PizzaFai - Comprovante de Pedido');
+    lines.push(`Data: ${new Date().toLocaleString()}`);
+    if (pedido.cliente) {
+        lines.push(`Cliente: ${pedido.cliente.nome} (CPF: ${pedido.cliente.cpf || 'N/A'})`);
+    } else {
+        lines.push('Cliente: Não cadastrado');
+    }
+    lines.push(`Pizza: ${pedido.pizza ? pedido.pizza.nome : 'N/A'}`);
+    lines.push(`Tamanho: ${pedido.tamanho || 1}`);
+    lines.push(`Bebida: ${pedido.bebida ? pedido.bebida.nome : 'Nenhuma'}`);
+    lines.push(`Sobremesa: ${pedido.sobremesa ? pedido.sobremesa.nome : 'Nenhuma'}`);
+    lines.push('');
+    lines.push(`Total: R$ ${Number(pedido.total || 0).toFixed(2)}`);
+
+    const content = lines.join('\n');
+
+    // Tenta carregar jsPDF se não estiver presente
+    if (!window.jspdf) {
+        try {
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                s.onload = () => resolve();
+                s.onerror = () => reject(new Error('Falha ao carregar jsPDF'));
+                document.head.appendChild(s);
+            });
+        } catch (err) {
+            console.warn('jsPDF não pôde ser carregado, irá usar fallback TXT:', err);
+        }
+    }
+
+    // Se jsPDF estiver disponível, gera PDF
+    if (window.jspdf && window.jspdf.jsPDF) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 10;
+            let y = 15;
+            const lineHeight = 8;
+            const linesArr = content.split('\n');
+            doc.setFontSize(12);
+            linesArr.forEach(line => {
+                const split = doc.splitTextToSize(line, pageWidth - margin * 2);
+                doc.text(split, margin, y);
+                y += lineHeight * split.length;
+                if (y > doc.internal.pageSize.getHeight() - 20) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+            doc.save(filenamePdf);
+            return filenamePdf;
+        } catch (err) {
+            console.warn('Erro ao gerar PDF com jsPDF, usando TXT de fallback:', err);
+        }
+    }
+
+    // Fallback: gera TXT e força download
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseFilename}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    return `${baseFilename}.txt`;
+}
